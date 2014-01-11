@@ -1,6 +1,6 @@
+import argparse
 from battleships_gui import BattleshipsGraphics
 import const
-import getopt
 import playerloader
 from random import randint
 import sys
@@ -264,36 +264,25 @@ def printTable(table, listPlayers):
 
         pos += 1
 
-helpText = "battleships.py [--gui] [--rounds=NUM]"
+parser = argparse.ArgumentParser(description="Blottleships Game Manager")
+parser.add_argument("-g", "--gui", action="store_true",
+                    help="Run with a GUI (default: %(default)s)")
+parser.add_argument("--rounds", default=10, type=int,
+                    help="""Number of rounds to run per
+                            game (default: %(default)s)""")
 
-
-hasGui = False
-rounds = 10 # Default
-try:
-    opts, args = getopt.getopt(sys.argv[1:], "hr:g", ["rounds", "gui"])
-except getopt.GetoptError:
-    print helpText
-    sys.exit(2)
-for opt, arg in opts:
-    if opt in ("-h", "--help"):
-        print helpText
-        sys.exit()
-    elif opt in ("-g", "--gui"):
-        hasGui = True
-    elif opt in ("-r", "--rounds"):
-        print arg
-        rounds = int(arg)
+args = parser.parse_args()
 
 # Import players file
 listPlayers = playerloader.import_players()
 
 gui = None
-if hasGui:
+if args.gui:
     gui = BattleshipsGraphics(12)  # Gridsize of 12
 
-table = playChampionship(listPlayers, rounds, gui)
+table = playChampionship(listPlayers, args.rounds, gui)
 printTable(table, listPlayers)
 
-if hasGui:
+if args.gui:
     # Must be the last line of code
     gui.screen.exitonclick()
