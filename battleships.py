@@ -10,7 +10,6 @@ from watchdog import Watchdog
 ##              PARAMETERS              ##
 ##########################################
 
-rounds = 300       # Number of rounds per match.
 watchdog_time = 2  # How many seconds to allow AIs for each function call.
 
 
