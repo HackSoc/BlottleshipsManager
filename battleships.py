@@ -70,29 +70,22 @@ def playChampionship(listPlayers, rounds, gui):
         # Draw
         if result[0] == result[1]:
             firstPlayerStats["Draw"] += 1
-            firstPlayerStats["For"] += result[0]
-            firstPlayerStats["Against"] += result[1]
             secondPlayerStats["Draw"] += 1
-            secondPlayerStats["For"] += result[1]
-            secondPlayerStats["Against"] += result[0]
 
         # Player 1 win
         elif result[0] > result[1]:
             firstPlayerStats["Win"] += 1
-            firstPlayerStats["For"] += result[0]
-            firstPlayerStats["Against"] += result[1]
             secondPlayerStats["Loss"] += 1
-            secondPlayerStats["For"] += result[1]
-            secondPlayerStats["Against"] += result[0]
 
         # Player 2 win
         else:
             firstPlayerStats["Loss"] += 1
-            firstPlayerStats["For"] += result[0]
-            firstPlayerStats["Against"] += result[1]
             secondPlayerStats["Win"] += 1
-            secondPlayerStats["For"] += result[1]
-            secondPlayerStats["Against"] += result[0]
+
+        firstPlayerStats["For"] += result[0]
+        firstPlayerStats["Against"] += result[1]
+        secondPlayerStats["For"] += result[1]
+        secondPlayerStats["Against"] += result[0]
 
     return table
 
