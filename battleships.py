@@ -56,7 +56,7 @@ def playChampionship(listPlayers, rounds, gui):
     totalPlayers = len(listPlayers)
     listGames = []
     for home in range(totalPlayers - 1):
-        for away in range(home+1, totalPlayers):
+        for away in range(home + 1, totalPlayers):
             listGames.append((home, away))
 
     print listGames
@@ -148,7 +148,8 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                 with Watchdog(watchdog_time):
                     i1, i2 = firstPlayer.chooseMove()
             except Watchdog:
-                print "Player 1 took longer than 2s for chooseMove()"
+                print "Player 1 took longer than {}s for chooseMove()"\
+                    .format(watchdog_time)
                 return (0, 1)
 
             # Ask the user to enter the outcome
@@ -164,14 +165,16 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                 with Watchdog(watchdog_time):
                     firstPlayer.setOutcome(outcome, i1, i2)
             except Watchdog:
-                print "Player 1 took longer than 2s for setOutcome()"
+                print "Player 1 took longer than {}s for setOutcome()"\
+                    .format(watchdog_time)
                 return (0, 1)
 
             try:
                 with Watchdog(watchdog_time):
                     secondPlayer.getOpponentMove(i1, i2)
             except Watchdog:
-                print "Player 2 took longer than 2s for getOpponentMove()"
+                print "Player 2 took longer than {}s for getOpponentMove()"\
+                    .format(watchdog_time)
                 return (1, 0)
 
             # Show the current board state
@@ -184,7 +187,8 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                 with Watchdog(watchdog_time):
                     i1, i2 = secondPlayer.chooseMove()
             except Watchdog:
-                print "Player 2 took longer than 2s for chooseMove()"
+                print "Player 2 took longer than {}s for chooseMove()"\
+                    .format(watchdog_time)
                 return (1, 0)
 
             # Ask the user to enter the outcome
@@ -199,14 +203,16 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                 with Watchdog(watchdog_time):
                     secondPlayer.setOutcome(outcome, i1, i2)
             except Watchdog:
-                print "Player 2 took longer than 2s for setOutcome()"
+                print "Player 2 took longer than {}s for setOutcome()"\
+                    .format(watchdog_time)
                 return (1, 0)
 
             try:
                 with Watchdog(watchdog_time):
                     firstPlayer.getOpponentMove(i1, i2)
             except Watchdog:
-                print "Player 1 took longer than 2s for getOpponentMove()"
+                print "Player 1 took longer than {}s for getOpponentMove()"\
+                    .format(watchdog_time)
                 return (0, 1)
 
             # Show the current board state
