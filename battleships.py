@@ -20,7 +20,7 @@ def checkWinner(board):
     # equals the total number of squares in the fleet
     hits = 0
     for i in range(12):
-        hits += board[i].count(4)
+        hits += board[i].count(const.HIT)
     return hits == 21
 
 
