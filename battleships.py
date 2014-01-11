@@ -128,17 +128,18 @@ def playMatch(firstPlayer, secondPlayer, rounds, gui):
 def playGame(firstPlayer, secondPlayer, turn, gui):
     # Distribute the fleet onto each player board
     player1_board = firstPlayer.deployFleet()
-
-    for row in range(len(player1_board)):
-        for col in range(len(player1_board[row])):
-            if gui and player1_board[row][col] == const.OCCUPIED:
-                gui.drawBoat('right', row, col)
-
     player2_board = secondPlayer.deployFleet()
-    for row in range(len(player2_board)):
-        for col in range(len(player2_board[row])):
-            if gui and player2_board[row][col] == const.OCCUPIED:
-                gui.drawBoat('left', row, col)
+
+    if gui:
+        for row in range(len(player1_board)):
+            for col in range(len(player1_board[row])):
+                if player1_board[row][col] == const.OCCUPIED:
+                    gui.drawBoat('right', row, col)
+
+        for row in range(len(player2_board)):
+            for col in range(len(player2_board[row])):
+                if player2_board[row][col] == const.OCCUPIED:
+                    gui.drawBoat('left', row, col)
 
     haveWinner = False
     while not haveWinner:
