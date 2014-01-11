@@ -264,19 +264,25 @@ def printTable(table, listPlayers):
 
         pos += 1
 
+helpText = "battleships.py [--gui] [--rounds=NUM]"
+
 
 hasGui = False
+rounds = 10 # Default
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "hg", ["gui"])
+    opts, args = getopt.getopt(sys.argv[1:], "hr:g", ["rounds", "gui"])
 except getopt.GetoptError:
-    print "battleships.py [--gui]"
+    print helpText
     sys.exit(2)
 for opt, arg in opts:
     if opt in ("-h", "--help"):
-        print "battleships.py [--gui]"
+        print helpText
         sys.exit()
     elif opt in ("-g", "--gui"):
         hasGui = True
+    elif opt in ("-r", "--rounds"):
+        print arg
+        rounds = int(arg)
 
 # Import players file
 listPlayers = playerloader.import_players()
