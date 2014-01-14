@@ -74,12 +74,9 @@ class Player(BasePlayer):
              so A3 case is (0,2)
         """
 
-        is_valid = False
         if entry == const.HIT:
-            is_valid = True
             Outcome = const.HIT
         elif entry == const.MISSED:
-            is_valid = True
             Outcome = const.MISSED
         else:
             raise Exception("Invalid input!")

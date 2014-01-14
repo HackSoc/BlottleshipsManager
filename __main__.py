@@ -217,12 +217,7 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
             turn *= -1
             haveWinner = checkWinner(player1_board)
 
-    if turn > 0:
-        result = (0, 1)
-    else:
-        result = (1, 0)
-
-    return result
+    return (0, 1) if turn > 0 else (1, 0)
 
 
 def printTable(table, listPlayers):

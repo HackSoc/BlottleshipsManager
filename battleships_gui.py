@@ -94,7 +94,6 @@ class BattleshipsGraphics:
         marginh = (height - self.squareSize * self.gridSize)/2
         marginw = (width - 2 * self.squareSize * self.gridSize)/4
         middleh = -marginh / 3  # Vertical offset
-        bottom = -self.squareSize * self.gridSize / 2 + middleh
         top = self.squareSize * self.gridSize / 2 + middleh
 
         if board == 'left':
@@ -113,7 +112,6 @@ class BattleshipsGraphics:
         marginh = (height - self.squareSize * self.gridSize) / 2
         marginw = (width - 2 * self.squareSize * self.gridSize) / 4
         middleh = -marginh / 3  # Vertical offset
-        bottom = -self.squareSize * self.gridSize / 2 + middleh
         top = self.squareSize * self.gridSize / 2 + middleh
 
         if board == 'left':
@@ -136,7 +134,6 @@ class BattleshipsGraphics:
         marginh = (height - self.squareSize * self.gridSize) / 2
         marginw = (width - 2 * self.squareSize * self.gridSize) / 4
         middleh = -marginh / 3  # Vertical offset
-        bottom = -self.squareSize * self.gridSize / 2 + middleh
         top = self.squareSize * self.gridSize / 2 + middleh
 
         if board == 'left':
@@ -160,7 +157,6 @@ class BattleshipsGraphics:
         marginh = (height - self.squareSize * self.gridSize) / 2
         middleh = -marginh / 3  # Vertical offset
         bottom = -self.squareSize * self.gridSize / 2 + middleh
-        top = self.squareSize * self.gridSize / 2 + middleh
 
         if board == 'left':
             center = -self.gridSize * self.squareSize / 2 - marginw
@@ -175,12 +171,6 @@ class BattleshipsGraphics:
 
     def drawWinner(self, board):
         width = self.screen.window_width()
-        height = self.screen.window_height()
-        marginh = (height - self.squareSize * self.gridSize) / 2
-        marginw = (width - 2 * self.squareSize * self.gridSize) / 4
-        middleh = -marginh / 3  # Vertical offset
-        bottom = -self.squareSize * self.gridSize / 2 + middleh
-        top = self.squareSize * self.gridSize / 2 + middleh
 
         if board == 'left':
             win = -width / 4
@@ -204,12 +194,7 @@ class BattleshipsGraphics:
 
     def drawScore(self, leftPlayerScore, rightPlayerScore):
         width = self.screen.window_width()
-        height = self.screen.window_height()
-        marginh = (height - self.squareSize * self.gridSize) / 2
         marginw = (width - 2 * self.squareSize * self.gridSize) / 4
-        middleh = -marginh / 3  # Vertical offset
-        bottom = -self.squareSize * self.gridSize / 2 + middleh
-        top = self.squareSize * self.gridSize / 2 + middleh
 
         self.turtle.color("green", "black")
         self._fillRectangle(-marginw / 2, 30, marginw, 40)
