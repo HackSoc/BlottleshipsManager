@@ -22,8 +22,8 @@ def checkWinner(board):
 
 
 def giveOutcome(player_board, i1, i2):
-    if ((player_board[i1][i2] == const.OCCUPIED)
-            or (player_board[i1][i2] == const.HIT)):
+    if player_board[i1][i2] == const.OCCUPIED
+            or player_board[i1][i2] == const.HIT:
         # They may (stupidly) hit the same square
         # twice so we check for occupied or hit
         player_board[i1][i2] = const.HIT
