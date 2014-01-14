@@ -1,7 +1,7 @@
 import argparse
 from battleships_gui import BattleshipsGraphics
 import const
-import playerloader
+import Players
 from watchdog import Watchdog
 
 ##########################################
@@ -263,8 +263,8 @@ parser.add_argument("--rounds", default=10, type=int,
 
 args = parser.parse_args()
 
-# Import players file
-playerList = playerloader.import_players()
+# Import players files
+playerList = Players.load()
 
 guiInstance = None
 if args.gui:
