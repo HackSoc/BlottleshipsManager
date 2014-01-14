@@ -98,10 +98,11 @@ def playMatch(firstPlayer, secondPlayer, rounds, gui):
             gui.drawScore(scorePlayer1, scorePlayer2)
 
         turn = (-1)**game
-        p1, p2 = playGame(firstPlayer, secondPlayer, turn, gui)
 
-        scorePlayer1 += p1
-        scorePlayer2 += p2
+        if playGame(firstPlayer, secondPlayer, turn, gui) == firstPlayer:
+            scorePlayer1 += 1
+        else:
+            scorePlayer2 += 1
 
         print "---------------- ", firstPlayer.name, scorePlayer1, "-",
         print scorePlayer2, secondPlayer.name, "----------------"
@@ -122,101 +123,65 @@ def playMatch(firstPlayer, secondPlayer, rounds, gui):
 
 def playGame(firstPlayer, secondPlayer, turn, gui):
     # Distribute the fleet onto each player board
-    player1_board = firstPlayer.deployFleet()
-    player2_board = secondPlayer.deployFleet()
+    firstPlayer.deployFleet()
+    secondPlayer.deployFleet()
 
     if gui:
-        for row in range(len(player1_board)):
-            for col in range(len(player1_board[row])):
-                if player1_board[row][col] == const.OCCUPIED:
-                    gui.drawBoat('right', row, col)
-
-        for row in range(len(player2_board)):
-            for col in range(len(player2_board[row])):
-                if player2_board[row][col] == const.OCCUPIED:
+        for row in range(len(firstPlayer.board)):
+            for col in range(len(firstPlayer.board[row])):
+                if firstPlayer.board[row][col] == const.OCCUPIED:
                     gui.drawBoat('left', row, col)
 
-    haveWinner = False
-    while not haveWinner:
-        if turn > 0:
-            # Make a move by looking at the opponent's board
-            try:
-                with Watchdog(watchdog_time):
-                    i1, i2 = firstPlayer.chooseMove()
-            except Watchdog:
-                print "Player 1 took longer than {}s for chooseMove()"\
-                    .format(watchdog_time)
-                return (0, 1)
+        for row in range(len(secondPlayer.board)):
+            for col in range(len(secondPlayer.board[row])):
+                if secondPlayer.board[row][col] == const.OCCUPIED:
+                    gui.drawBoat('right', row, col)
 
-            # Ask the user to enter the outcome
-            outcome = giveOutcome(player2_board, i1, i2)
+    while True:
+        a = firstPlayer if turn > 0 else secondPlayer
+        b = secondPlayer if turn > 0 else firstPlayer
 
-            if gui:
-                if outcome == const.HIT:
-                    gui.drawHit('left', i1, i2)
-                else:
-                    gui.drawMiss('left', i1, i2)
+        # Make a move by looking at the opponent's board
+        try:
+            with Watchdog(watchdog_time):
+                row, col = a.chooseMove()
+        except Watchdog:
+            print "Player {} took longer than {}s for chooseMove".format(
+                "1" if turn > 0 else "2",
+                watchdog_time)
+            return b
 
-            try:
-                with Watchdog(watchdog_time):
-                    firstPlayer.setOutcome(outcome, i1, i2)
-            except Watchdog:
-                print "Player 1 took longer than {}s for setOutcome()"\
-                    .format(watchdog_time)
-                return (0, 1)
+        # Ask the user to enter the outcome
+        outcome = giveOutcome(b.board, row, col)
 
-            try:
-                with Watchdog(watchdog_time):
-                    secondPlayer.getOpponentMove(i1, i2)
-            except Watchdog:
-                print "Player 2 took longer than {}s for getOpponentMove()"\
-                    .format(watchdog_time)
-                return (1, 0)
+        if gui:
+            if outcome == const.HIT:
+                gui.drawHit('right' if turn > 0 else 'left', row, col)
+            else:
+                gui.drawMiss('right' if turn > 0 else 'left', row, col)
 
-            # Show the current board state
-            turn *= -1
-            haveWinner = checkWinner(player2_board)
+        try:
+            with Watchdog(watchdog_time):
+                a.setOutcome(outcome, row, col)
+        except Watchdog:
+            print "Player {} took longer than {}s for setOutcome".format(
+                "1" if turn > 0 else "2",
+                watchdog_time)
+            return b
 
-        else:
-            # Make a move by looking at the opponent's board
-            try:
-                with Watchdog(watchdog_time):
-                    i1, i2 = secondPlayer.chooseMove()
-            except Watchdog:
-                print "Player 2 took longer than {}s for chooseMove()"\
-                    .format(watchdog_time)
-                return (1, 0)
+        try:
+            with Watchdog(watchdog_time):
+                b.getOpponentMove(row, col)
+        except Watchdog:
+            print "Player {} took longer than {}s for getOpponentMove".format(
+                "2" if turn > 0 else "1",
+                watchdog_time)
+            return a
 
-            # Ask the user to enter the outcome
-            outcome = giveOutcome(player1_board, i1, i2)
-            if gui:
-                if outcome == const.HIT:
-                    gui.drawHit('right', i1, i2)
-                else:
-                    gui.drawMiss('right', i1, i2)
+        if checkWinner(b.board):
+            return a
 
-            try:
-                with Watchdog(watchdog_time):
-                    secondPlayer.setOutcome(outcome, i1, i2)
-            except Watchdog:
-                print "Player 2 took longer than {}s for setOutcome()"\
-                    .format(watchdog_time)
-                return (1, 0)
-
-            try:
-                with Watchdog(watchdog_time):
-                    firstPlayer.getOpponentMove(i1, i2)
-            except Watchdog:
-                print "Player 1 took longer than {}s for getOpponentMove()"\
-                    .format(watchdog_time)
-                return (0, 1)
-
-            # Show the current board state
-            turn *= -1
-            haveWinner = checkWinner(player1_board)
-
-    return (0, 1) if turn > 0 else (1, 0)
-
+        turn *= -1
 
 def printTable(table, listPlayers):
     wins = 3

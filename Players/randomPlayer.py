@@ -14,32 +14,31 @@ class Player(BasePlayer):
 
     def deployFleet(self):
         """
-        Decide where you want your fleet to be deployed, then return your
-        board. The attribute to be modified is _playerBoard. You can see
-        how it is defined in the _initBoards method in the file BasePlayer.py
+        Decide where you want your fleet to be deployed. The attribute
+        to be modified is board. You can see how it is defined in the
+        _initBoards method in the file BasePlayer.py
         """
-        self._initBoards()
+
         # Simple example which always positions the ships in the same place
         # This is a very bad idea! You will want to do something random
         # Destroyer (2 squares)
-        self._playerBoard[0][5] = const.OCCUPIED
-        self._playerBoard[1][5] = const.OCCUPIED
+        self.board[0][5] = const.OCCUPIED
+        self.board[1][5] = const.OCCUPIED
         # Cruiser (3 squares)
-        self._playerBoard[1][1:4] = [const.OCCUPIED] * 3
+        self.board[1][1:4] = [const.OCCUPIED] * 3
         # Battleship (4 squares)
-        self._playerBoard[6][6] = const.OCCUPIED
-        self._playerBoard[6][7] = const.OCCUPIED
-        self._playerBoard[6][8] = const.OCCUPIED
-        self._playerBoard[6][9] = const.OCCUPIED
+        self.board[6][6] = const.OCCUPIED
+        self.board[6][7] = const.OCCUPIED
+        self.board[6][8] = const.OCCUPIED
+        self.board[6][9] = const.OCCUPIED
         # Hovercraft (6 squares)
-        self._playerBoard[8][2] = const.OCCUPIED
-        self._playerBoard[9][1:4] = [const.OCCUPIED] * 3
-        self._playerBoard[10][1:4:2] = [const.OCCUPIED] * 2
+        self.board[8][2] = const.OCCUPIED
+        self.board[9][1:4] = [const.OCCUPIED] * 3
+        self.board[10][1:4:2] = [const.OCCUPIED] * 2
         # Aircraft carrier (6 squares)
-        self._playerBoard[9][5:9] = [const.OCCUPIED] * 4
-        self._playerBoard[8][5] = const.OCCUPIED
-        self._playerBoard[10][5] = const.OCCUPIED
-        return self._playerBoard
+        self.board[9][5:9] = [const.OCCUPIED] * 4
+        self.board[8][5] = const.OCCUPIED
+        self.board[10][5] = const.OCCUPIED
 
     def chooseMove(self):
         """
@@ -75,7 +74,7 @@ class Player(BasePlayer):
             Outcome = const.MISSED
         else:
             raise Exception("Invalid input!")
-        self._opponenBoard[row][col] = Outcome
+        self.opponent_board[row][col] = Outcome
 
     def getOpponentMove(self, row, col):
         """
@@ -83,11 +82,11 @@ class Player(BasePlayer):
         has missed, but here we just acknowledge it. Note case A3 is
         represented as row = 0, col = 2.
         """
-        if ((self._playerBoard[row][col] == const.OCCUPIED)
-                or (self._playerBoard[row][col] == const.HIT)):
+        if ((self.board[row][col] == const.OCCUPIED)
+                or (self.board[row][col] == const.HIT)):
             # They may (stupidly) hit the same square
             # twice so we check for occupied or hit
-            self._playerBoard[row][col] = const.HIT
+            self.board[row][col] = const.HIT
             result = const.HIT
         else:
             # You might like to keep track of where your

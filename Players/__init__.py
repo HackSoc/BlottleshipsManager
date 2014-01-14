@@ -36,15 +36,15 @@ class BasePlayer:
         # Initially, the player's board is all
         # empty, the opponent's is all unknown.
 
-        self._playerBoard = [[const.EMPTY] * (6 if x < 6 else 12)
-                             for x in range(12)]
-        self._opponenBoard = [[const.EMPTY] * (6 if x < 6 else 12)
-                              for x in range(12)]
+        self.board = [[const.EMPTY] * (6 if x < 6 else 12)
+                      for x in range(12)]
+        self.opponent_board = [[const.UNKNOWN] * (6 if x < 6 else 12)
+                               for x in range(12)]
 
     def deployFleet(self):
         """
         Decide where you want your fleet to
-        be deployed, then return your board.
+        be deployed.
         """
 
         pass
