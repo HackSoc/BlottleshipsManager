@@ -27,13 +27,11 @@ def giveOutcome(player_board, i1, i2):
         # They may (stupidly) hit the same square
         # twice so we check for occupied or hit
         player_board[i1][i2] = const.HIT
-        result = const.HIT
+        return const.HIT
     else:
         # You might like to keep track of where your opponent
         # has missed, but here we just acknowledge it
-        result = const.MISSED
-    return result
-
+        return const.MISSED
 
 def initialiseChampionshipTable(listPlayers):
     table = {}
