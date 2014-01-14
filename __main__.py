@@ -91,10 +91,10 @@ def playMatch(firstPlayer, secondPlayer, rounds, gui):
         if gui:
             gui.turtle.clear()
             gui.drawBoards()
-            gui.drawPlayer(firstPlayer.getName(),
-                           firstPlayer.getDescription(), 'left')
-            gui.drawPlayer(secondPlayer.getName(),
-                           secondPlayer.getDescription(), 'right')
+            gui.drawPlayer(firstPlayer.name,
+                           firstPlayer.description, 'left')
+            gui.drawPlayer(secondPlayer.name,
+                           secondPlayer.description, 'right')
             gui.drawScore(scorePlayer1, scorePlayer2)
 
         turn = (-1)**game
@@ -103,8 +103,8 @@ def playMatch(firstPlayer, secondPlayer, rounds, gui):
         scorePlayer1 += p1
         scorePlayer2 += p2
 
-        print "---------------- ", firstPlayer.getName(), scorePlayer1, "-",
-        print scorePlayer2, secondPlayer.getName(), "----------------"
+        print "---------------- ", firstPlayer.name, scorePlayer1, "-",
+        print scorePlayer2, secondPlayer.name, "----------------"
 
         if gui:
             gui.drawScore(scorePlayer1, scorePlayer2)
@@ -237,7 +237,7 @@ def printTable(table, listPlayers):
     print " | pos | ", "   Name                ", " | ", " W ", " D ", " L ",
     print "  F ", "  ", " | ", "Points |"
     for player in listResults:
-        name = listPlayers[player[3]].getName()
+        name = listPlayers[player[3]].name
 
         # Padding name
         if len(name) <= 25:

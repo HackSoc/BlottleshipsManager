@@ -5,35 +5,36 @@ import const
 
 
 class BasePlayer:
-    def __init__(self):
+    def __init__(self, name="Unknown", year=1,
+                 version="1.0", description="None"):
         """
         Initialise the boards: player to empty, opponent to unknown.
+
+        name: Can be whatever you want as long as it is a sensible
+              one, and no more than 25 characters.
+        year: Indicate your year of study here should range from 1 to 4.
+        version: The version of your solution if you have more than one.
+        description: A description of how your player works.
         """
-        self._playerName = "Unknown"
-        self._playerDescription = "None"
 
-    def getName(self):
-        return self._playerName
+        self.name = name
+        self.year = year
+        self.version = version
+        self.description = description
 
-    def getDescription(self):
-        return self._playerDescription
-
-    def _initBoards(self):
-        """
-        The boards are stored in a "jagged" 2 dimensional list
-        Example: to access the opponent at position B6 use Opponent[1][5]
-        (Remember python indexes from 0)
-
-        The following convention is used for storing the state of a square:
-        Unknown  = 0
-        Empty    = 1
-        Occupied = 2
-        Missed   = 3
-        Hit      = 4 (player or opponent)
-
-        Initially, the player's board is all
-        empty, the opponent's is all unknown.
-        """
+        # The boards are stored in a "jagged" 2 dimensional list
+        # Example: to access the opponent at position B6 use Opponent[1][5]
+        # (Remember python indexes from 0)
+        #
+        # The following convention is used for storing the state of a square:
+        # Unknown  = 0
+        # Empty    = 1
+        # Occupied = 2
+        # Missed   = 3
+        # Hit      = 4 (player or opponent)
+        #
+        # Initially, the player's board is all
+        # empty, the opponent's is all unknown.
 
         self._playerBoard = [[const.EMPTY] * (6 if x < 6 else 12)
                              for x in range(12)]
@@ -45,6 +46,7 @@ class BasePlayer:
         Decide where you want your fleet to
         be deployed, then return your board.
         """
+
         pass
 
     def chooseMove(self):
@@ -60,6 +62,7 @@ class BasePlayer:
         Read the outcome of the shot from the keyboard expected
         value is const.HIT for hit and const.MISSED for missed.
         """
+
         pass
 
     def getOpponentMove(self, i1, i2):

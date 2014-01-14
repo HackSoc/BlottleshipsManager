@@ -5,17 +5,12 @@ from random import randint
 
 class Player(BasePlayer):
     def __init__(self):
-        BasePlayer.__init__(self)
-
-        # Can be whatever you want as long as it is a sensible one.
-        # No more than 25 characters.
-        self._playerName = "Worst Player... Ever!"
-        # Indicate your year of study here should range from 1 to 4.
-        self._playerYear = "1"
-        # Enter the version of your solution if you have more than one.
-        self._version = "1.0"
-        self._playerDescription = ("Choose randomly is move, \nand may "
-                                   "hit the same place more than once.")
+        BasePlayer.__init__(self,
+                            name="Worst Player... Ever!",
+                            year=1,
+                            version="1.0",
+                            description="Choose randomly is move, \nand may "
+                                        "hit the same place more than once.")
 
     def deployFleet(self):
         """
