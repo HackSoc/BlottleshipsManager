@@ -1,25 +1,20 @@
 # Import players files
 import glob
+import imp
+import os
+import Players
 
 
 def import_players():
     list_files = glob.glob("Players/*.py")
-    players_files = []
-    for f in list_files:
-        if f.find('__init__.py') < 0:
-            f = f.replace("\\", '.')
-            f = f.replace('/', '.')
 
-            players_files.append(f[:-3])
-
-    print players_files
+    players_files = [('./' + f, f.replace(os.sep, '.')[:-3])
+                     for f in list_files
+                     if "__init__" not in f]
 
     listPlayers = []
-    player_number = 1
-    for f in players_files:
-        exec(("import " + f + " as player" + str(player_number)))
-        player = eval(("player" + str(player_number) + ".getPlayer()"))
-        listPlayers.append(player)
-        player_number += 1
+    for fname, mname in players_files:
+        mod = imp.load_source(mname, fname)
+        listPlayers.append(mod.getPlayer())
 
     return listPlayers

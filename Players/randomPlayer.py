@@ -1,11 +1,11 @@
 import const
-import base_player
+from Players import BasePlayer
 from random import randint
 
 
-class Player(base_player.BasePlayer):
+class Player(BasePlayer):
     def __init__(self):
-        base_player.BasePlayer.__init__(self)
+        BasePlayer.__init__(self)
 
         # Can be whatever you want as long as it is a sensible one.
         # No more than 25 characters.
@@ -21,7 +21,7 @@ class Player(base_player.BasePlayer):
         """
         Decide where you want your fleet to be deployed, then return your
         board. The attribute to be modified is _playerBoard. You can see
-        how it is defined in the _initBoards method in the file base_player.py
+        how it is defined in the _initBoards method in the file BasePlayer.py
         """
         self._initBoards()
         # Simple example which always positions the ships in the same place
