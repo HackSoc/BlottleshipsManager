@@ -2,8 +2,6 @@ import argparse
 from battleships_gui import BattleshipsGraphics
 import const
 import playerloader
-from random import randint
-import sys
 from watchdog import Watchdog
 
 ##########################################
@@ -219,9 +217,7 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
             turn *= -1
             haveWinner = checkWinner(player1_board)
 
-    winner = "Player 1"
     if turn > 0:
-        winner = "Player 2"
         result = (0, 1)
     else:
         result = (1, 0)
@@ -273,15 +269,15 @@ parser.add_argument("--rounds", default=10, type=int,
 args = parser.parse_args()
 
 # Import players file
-listPlayers = playerloader.import_players()
+playerList = playerloader.import_players()
 
-gui = None
+guiInstance = None
 if args.gui:
-    gui = BattleshipsGraphics(12)  # Gridsize of 12
+    guiInstance = BattleshipsGraphics(12)  # Gridsize of 12
 
-table = playChampionship(listPlayers, args.rounds, gui)
-printTable(table, listPlayers)
+resultsTable = playChampionship(playerList, args.rounds, guiInstance)
+printTable(resultsTable, playerList)
 
 if args.gui:
     # Must be the last line of code
-    gui.screen.exitonclick()
+    guiInstance.screen.exitonclick()
