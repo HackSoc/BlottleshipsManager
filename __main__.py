@@ -284,4 +284,4 @@ printTable(table, listPlayers)
 
 if args.gui:
     # Must be the last line of code
-    gui.screen.exitonclick()
+    gui.exitonclick()

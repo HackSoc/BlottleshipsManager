@@ -11,13 +11,13 @@ class BattleshipsGraphics:
 
     def __init__(self, gridSize):
         self._turtle = turtle.Turtle()
-        self.screen = turtle.getscreen()
-        self.screen.setup(width=1200, height=750, startx=None, starty=None)
-        self.screen.register_shape(const.MISSED_GIF)
-        self.screen.register_shape(const.HIT_GIF)
-        self.screen.register_shape(const.WINNER_GIF)
-        self.screen.register_shape(const.LOOSER_GIF)
-        self.screen.bgpic(const.BOARD_BKG_GIF)
+        self._screen = turtle.getscreen()
+        self._screen.setup(width=1200, height=750, startx=None, starty=None)
+        self._screen.register_shape(const.MISSED_GIF)
+        self._screen.register_shape(const.HIT_GIF)
+        self._screen.register_shape(const.WINNER_GIF)
+        self._screen.register_shape(const.LOOSER_GIF)
+        self._screen.bgpic(const.BOARD_BKG_GIF)
         self._turtle.speed(0)
         self._turtle.color("black")
         self.squareSize = 40
@@ -27,7 +27,7 @@ class BattleshipsGraphics:
         self._turtle.showturtle()
 
     def setScreenSize(self, width, height):
-        self.screen.setup(width=width, height=height,
+        self._screen.setup(width=width, height=height,
                           startx=None, starty=None)
 
     def setSquareSize(self, squareSize):
@@ -92,8 +92,8 @@ class BattleshipsGraphics:
         self._turtle.clear()
 
     def drawBoat(self, board, row, col):
-        width = self.screen.window_width()
-        height = self.screen.window_height()
+        width = self._screen.window_width()
+        height = self._screen.window_height()
         marginh = (height - self.squareSize * self.gridSize)/2
         marginw = (width - 2 * self.squareSize * self.gridSize)/4
         middleh = -marginh / 3  # Vertical offset
@@ -111,8 +111,8 @@ class BattleshipsGraphics:
         self._turtle.penup()
 
     def drawMiss(self, board, row, col):
-        width = self.screen.window_width()
-        height = self.screen.window_height()
+        width = self._screen.window_width()
+        height = self._screen.window_height()
         marginh = (height - self.squareSize * self.gridSize) / 2
         marginw = (width - 2 * self.squareSize * self.gridSize) / 4
         middleh = -marginh / 3  # Vertical offset
@@ -134,8 +134,8 @@ class BattleshipsGraphics:
         self._turtle.penup()
 
     def drawHit(self, board, row, col):
-        width = self.screen.window_width()
-        height = self.screen.window_height()
+        width = self._screen.window_width()
+        height = self._screen.window_height()
         marginh = (height - self.squareSize * self.gridSize) / 2
         marginw = (width - 2 * self.squareSize * self.gridSize) / 4
         middleh = -marginh / 3  # Vertical offset
@@ -157,8 +157,8 @@ class BattleshipsGraphics:
         self._turtle.penup()
 
     def drawPlayer(self, name, description, board):
-        width = self.screen.window_width()
-        height = self.screen.window_height()
+        width = self._screen.window_width()
+        height = self._screen.window_height()
         marginw = (width - 2 * self.squareSize * self.gridSize) / 4
         marginh = (height - self.squareSize * self.gridSize) / 2
         middleh = -marginh / 3  # Vertical offset
@@ -177,8 +177,8 @@ class BattleshipsGraphics:
         self._turtle.penup()
 
     def drawWinner(self, board):
-        width = self.screen.window_width()
-        height = self.screen.window_height()
+        width = self._screen.window_width()
+        height = self._screen.window_height()
         marginh = (height - self.squareSize * self.gridSize) / 2
         marginw = (width - 2 * self.squareSize * self.gridSize) / 4
         middleh = -marginh / 3  # Vertical offset
@@ -206,8 +206,8 @@ class BattleshipsGraphics:
         self._turtle.penup()
 
     def drawScore(self, leftPlayerScore, rightPlayerScore):
-        width = self.screen.window_width()
-        height = self.screen.window_height()
+        width = self._screen.window_width()
+        height = self._screen.window_height()
         marginh = (height - self.squareSize * self.gridSize) / 2
         marginw = (width - 2 * self.squareSize * self.gridSize) / 4
         middleh = -marginh / 3  # Vertical offset
@@ -221,8 +221,8 @@ class BattleshipsGraphics:
         self._turtle.penup()
 
     def drawBoards(self):
-        width = self.screen.window_width()
-        height = self.screen.window_height()
+        width = self._screen.window_width()
+        height = self._screen.window_height()
         squareSize = self.squareSize
         gridSize = self.gridSize
         marginh = (height - self.squareSize * self.gridSize)/2
@@ -328,3 +328,6 @@ class BattleshipsGraphics:
                             middleh + squareSize / 3,
                             font=("Arial", 12, "normal"))
         self._turtle.penup()
+
+    def exitonclick():
+        self._screen.exitonclick()
