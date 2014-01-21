@@ -93,7 +93,7 @@ def playMatch(firstPlayer, secondPlayer, rounds, gui):
     scorePlayer1 = scorePlayer2 = 0
     for game in range(rounds):
         if gui:
-            gui.turtle.clear()
+            gui.clear()
             gui.drawBoards()
             gui.drawPlayer(firstPlayer.getName(),
                            firstPlayer.getDescription(), 'left')
