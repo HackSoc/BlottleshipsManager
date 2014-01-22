@@ -1,5 +1,4 @@
 import argparse
-from battleships_gui import BattleshipsGraphics
 import const
 import Players
 from watchdog import Watchdog
@@ -266,6 +265,7 @@ playerList = Players.load()
 
 guiInstance = None
 if args.gui:
+    from battleships_gui import BattleshipsGraphics
     guiInstance = BattleshipsGraphics(12)  # Gridsize of 12
 
 resultsTable = playChampionship(playerList, args.rounds, guiInstance)
