@@ -1,6 +1,6 @@
 import argparse
 import const
-import Players
+import playerloader
 from watchdog import Watchdog
 
 ##########################################
@@ -260,8 +260,8 @@ parser.add_argument("--rounds", default=10, type=int,
 
 args = parser.parse_args()
 
-# Import players files
-playerList = Players.load()
+# Import players file
+playerList = playerloader.import_players()
 
 guiInstance = None
 if args.gui:
