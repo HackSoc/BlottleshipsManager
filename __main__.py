@@ -136,6 +136,7 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                     gui.drawBoat('left', row, col)
 
     haveWinner = False
+    counter = 0
     while not haveWinner:
         if turn > 0:
             # Make a move by looking at the opponent's board
@@ -173,7 +174,6 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                 return (1, 0)
 
             # Show the current board state
-            turn *= -1
             haveWinner = checkWinner(player2_board)
 
         else:
@@ -211,9 +211,11 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                 return (0, 1)
 
             # Show the current board state
-            turn *= -1
             haveWinner = checkWinner(player1_board)
-
+        turn *= -1
+        counter += 1
+    if args.verbose:
+        print "Game was completed in {} moves".format(counter)
     return (0, 1) if turn > 0 else (1, 0)
 
 
@@ -252,6 +254,9 @@ def printTable(table, listPlayers):
         pos += 1
 
 parser = argparse.ArgumentParser(description="Blottleships Game Manager")
+parser.add_argument("-v", "--verbose", action="store_true",
+                    help="""Run with verbose console output
+                            (default: %(default)s)""")
 parser.add_argument("-g", "--gui", action="store_true",
                     help="Run with a GUI (default: %(default)s)")
 parser.add_argument("--rounds", default=10, type=int,
