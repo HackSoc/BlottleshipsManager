@@ -136,7 +136,8 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                     gui.drawBoat('left', row, col)
 
     haveWinner = False
-    counter = 0
+    player1Moves = 0
+    player2Moves = 0
     while not haveWinner:
         if turn > 0:
             # Make a move by looking at the opponent's board
@@ -175,6 +176,7 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
 
             # Show the current board state
             haveWinner = checkWinner(player2_board)
+            player1Moves += 1
 
         else:
             # Make a move by looking at the opponent's board
@@ -212,10 +214,12 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
 
             # Show the current board state
             haveWinner = checkWinner(player1_board)
+            player2Moves += 1
         turn *= -1
-        counter += 1
+
     if args.verbose:
-        print "Game was completed in {} moves".format(counter)
+        print "Player1 moves: {}; Player2 moves: {}".format(player1Moves,
+                                                            player2Moves)
     return (0, 1) if turn > 0 else (1, 0)
 
 
