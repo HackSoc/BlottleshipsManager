@@ -99,10 +99,12 @@ def playMatch(firstPlayer, secondPlayer, rounds, gui):
             gui.drawScore(scorePlayer1, scorePlayer2)
 
         turn = (-1)**game
-        p1, p2 = playGame(firstPlayer, secondPlayer, turn, gui)
+        winner = playGame(firstPlayer, secondPlayer, turn, gui)
 
-        scorePlayer1 += p1
-        scorePlayer2 += p2
+        if winner is firstPlayer:
+            scorePlayer1 += 1
+        else:
+            scorePlayer2 += 1
 
         print "---------------- ", firstPlayer.getName(), scorePlayer1, "-",
         print scorePlayer2, secondPlayer.getName(), "----------------"
@@ -137,11 +139,11 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
     try:
         firstPlayer._playerBoard = timedAction(firstPlayer, firstPlayer.deployFleet)
     except Watchdog:
-        return (0, 1)
+        return secondPlayer
     try:
         secondPlayer._playerBoard = timedAction(secondPlayer, secondPlayer.deployFleet)
     except Watchdog:
-        return (1, 0)
+        return firstPlayer
 
     if gui:
         for row in range(len(player1_board)):
@@ -163,7 +165,7 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
             try:
                 i1, i2 = timedAction(firstPlayer, firstPlayer.chooseMove)
             except Watchdog:
-                return (0, 1)
+                return secondPlayer
 
             # Get result of move
             outcome = giveOutcome(secondPlayer._playerBoard, i1, i2)
@@ -177,12 +179,12 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
             try:
                 timedAction(firstPlayer, firstPlayer.setOutcome, outcome, i1, i2)
             except Watchdog:
-                return (0, 1)
+                return secondPlayer
 
             try:
                 timedAction(secondPlayer, secondPlayer.getOpponentMove, i1, i2)
             except Watchdog:
-                return (1, 0)
+                return firstPlayer
 
             # Show the current board state
             haveWinner = checkWinner(secondPlayer._playerBoard)
@@ -193,7 +195,7 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
             try:
                 i1, i2 = timedAction(secondPlayer, secondPlayer.chooseMove)
             except Watchdog:
-                return (1, 0)
+                return firstPlayer
 
             # Get result of move
             outcome = giveOutcome(firstPlayer._playerBoard, i1, i2)
@@ -207,12 +209,12 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
             try:
                 timedAction(secondPlayer, secondPlayer.setOutcome, outcome, i1, i2)
             except Watchdog:
-                return (1, 0)
+                return firstPlayer
 
             try:
                 timedAction(firstPlayer, firstPlayer.getOpponentMove, i1, i2)
             except Watchdog:
-                return (0, 1)
+                return secondPlayer
 
             # Show the current board state
             haveWinner = checkWinner(firstPlayer._playerBoard)
@@ -222,7 +224,7 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
     if args.verbose:
         print "Player1 moves: {}; Player2 moves: {}".format(player1Moves,
                                                             player2Moves)
-    return (0, 1) if turn > 0 else (1, 0)
+    return secondPlayer if turn > 0 else firstPlayer
 
 
 def printTable(table, listPlayers):
