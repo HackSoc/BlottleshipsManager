@@ -135,23 +135,23 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
 
     # Distribute the fleet onto each player board
     try:
-        player1_board = timedAction(firstPlayer, firstPlayer.deployFleet)
+        firstPlayer._playerBoard = timedAction(firstPlayer, firstPlayer.deployFleet)
     except Watchdog:
         return (0, 1)
     try:
-        player2_board = timedAction(secondPlayer, secondPlayer.deployFleet)
+        secondPlayer._playerBoard = timedAction(secondPlayer, secondPlayer.deployFleet)
     except Watchdog:
         return (1, 0)
 
     if gui:
         for row in range(len(player1_board)):
             for col in range(len(player1_board[row])):
-                if player1_board[row][col] == const.OCCUPIED:
+                if firstPlayer._playerBoard[row][col] == const.OCCUPIED:
                     gui.drawBoat('right', row, col)
 
         for row in range(len(player2_board)):
             for col in range(len(player2_board[row])):
-                if player2_board[row][col] == const.OCCUPIED:
+                if secondPlayer._playerBoard[row][col] == const.OCCUPIED:
                     gui.drawBoat('left', row, col)
 
     haveWinner = False
@@ -166,7 +166,7 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                 return (0, 1)
 
             # Get result of move
-            outcome = giveOutcome(player2_board, i1, i2)
+            outcome = giveOutcome(secondPlayer._playerBoard, i1, i2)
 
             if gui:
                 if outcome == const.HIT:
@@ -185,7 +185,7 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                 return (1, 0)
 
             # Show the current board state
-            haveWinner = checkWinner(player2_board)
+            haveWinner = checkWinner(secondPlayer._playerBoard)
             player1Moves += 1
 
         else:
@@ -196,7 +196,7 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                 return (1, 0)
 
             # Get result of move
-            outcome = giveOutcome(player1_board, i1, i2)
+            outcome = giveOutcome(firstPlayer._playerBoard, i1, i2)
 
             if gui:
                 if outcome == const.HIT:
@@ -215,7 +215,7 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                 return (0, 1)
 
             # Show the current board state
-            haveWinner = checkWinner(player1_board)
+            haveWinner = checkWinner(firstPlayer._playerBoard)
             player2Moves += 1
         turn *= -1
 
