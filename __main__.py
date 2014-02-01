@@ -121,23 +121,26 @@ def playMatch(firstPlayer, secondPlayer, rounds, gui):
     return (scorePlayer1, scorePlayer2)
 
 
+def timedAction(player, action, *args, **kwargs):
+    try:
+        with Watchdog(watchdog_time):
+            return action(*args, **kwargs)
+    except Watchdog, e:
+        print "{} took longer longer than {}s for {}()"\
+            .format(player.getName(), watchdog_time, action.__name__)
+        raise
+
+
 def playGame(firstPlayer, secondPlayer, turn, gui):
+
     # Distribute the fleet onto each player board
-
     try:
-        with Watchdog(watchdog_time):
-            player1_board = firstPlayer.deployFleet()
+        player1_board = timedAction(firstPlayer, firstPlayer.deployFleet)
     except Watchdog:
-        print "Player 1 took longer than {}s for deployFleet()"\
-           .format(watchdog_time)
         return (0, 1)
-
     try:
-        with Watchdog(watchdog_time):
-            player2_board = secondPlayer.deployFleet()
+        player2_board = timedAction(secondPlayer, secondPlayer.deployFleet)
     except Watchdog:
-        print "Player 2 took longer than {}s for deployFleet()"\
-           .format(watchdog_time)
         return (1, 0)
 
     if gui:
@@ -158,14 +161,11 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
         if turn > 0:
             # Make a move by looking at the opponent's board
             try:
-                with Watchdog(watchdog_time):
-                    i1, i2 = firstPlayer.chooseMove()
+                i1, i2 = timedAction(firstPlayer, firstPlayer.chooseMove)
             except Watchdog:
-                print "Player 1 took longer than {}s for chooseMove()"\
-                    .format(watchdog_time)
                 return (0, 1)
 
-            # Ask the user to enter the outcome
+            # Get result of move
             outcome = giveOutcome(player2_board, i1, i2)
 
             if gui:
@@ -175,19 +175,13 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                     gui.drawMiss('left', i1, i2)
 
             try:
-                with Watchdog(watchdog_time):
-                    firstPlayer.setOutcome(outcome, i1, i2)
+                timedAction(firstPlayer, firstPlayer.setOutcome, outcome, i1, i2)
             except Watchdog:
-                print "Player 1 took longer than {}s for setOutcome()"\
-                    .format(watchdog_time)
                 return (0, 1)
 
             try:
-                with Watchdog(watchdog_time):
-                    secondPlayer.getOpponentMove(i1, i2)
+                timedAction(secondPlayer, secondPlayer.getOpponentMove, i1, i2)
             except Watchdog:
-                print "Player 2 took longer than {}s for getOpponentMove()"\
-                    .format(watchdog_time)
                 return (1, 0)
 
             # Show the current board state
@@ -197,15 +191,13 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
         else:
             # Make a move by looking at the opponent's board
             try:
-                with Watchdog(watchdog_time):
-                    i1, i2 = secondPlayer.chooseMove()
+                i1, i2 = timedAction(secondPlayer, secondPlayer.chooseMove)
             except Watchdog:
-                print "Player 2 took longer than {}s for chooseMove()"\
-                    .format(watchdog_time)
                 return (1, 0)
 
-            # Ask the user to enter the outcome
+            # Get result of move
             outcome = giveOutcome(player1_board, i1, i2)
+
             if gui:
                 if outcome == const.HIT:
                     gui.drawHit('right', i1, i2)
@@ -213,19 +205,13 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
                     gui.drawMiss('right', i1, i2)
 
             try:
-                with Watchdog(watchdog_time):
-                    secondPlayer.setOutcome(outcome, i1, i2)
+                timedAction(secondPlayer, secondPlayer.setOutcome, outcome, i1, i2)
             except Watchdog:
-                print "Player 2 took longer than {}s for setOutcome()"\
-                    .format(watchdog_time)
                 return (1, 0)
 
             try:
-                with Watchdog(watchdog_time):
-                    firstPlayer.getOpponentMove(i1, i2)
+                timedAction(firstPlayer, firstPlayer.getOpponentMove, i1, i2)
             except Watchdog:
-                print "Player 1 took longer than {}s for getOpponentMove()"\
-                    .format(watchdog_time)
                 return (0, 1)
 
             # Show the current board state
