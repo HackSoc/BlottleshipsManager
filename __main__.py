@@ -146,85 +146,59 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
         return firstPlayer
 
     if gui:
-        for row in range(len(player1_board)):
-            for col in range(len(player1_board[row])):
+        for row in range(len(firstPlayer._playerBoard)):
+            for col in range(len(firstPlayer._playerBoard[row])):
                 if firstPlayer._playerBoard[row][col] == const.OCCUPIED:
                     gui.drawBoat('right', row, col)
 
-        for row in range(len(player2_board)):
-            for col in range(len(player2_board[row])):
+        for row in range(len(secondPlayer._playerBoard)):
+            for col in range(len(secondPlayer._playerBoard[row])):
                 if secondPlayer._playerBoard[row][col] == const.OCCUPIED:
                     gui.drawBoat('left', row, col)
 
-    haveWinner = False
     player1Moves = 0
     player2Moves = 0
-    while not haveWinner:
+    while True:
+        active = firstPlayer if turn > 0 else secondPlayer
+        passive = secondPlayer if turn > 0 else firstPlayer
+
+        # Make a move by looking at the opponent's board
+        try:
+            i1, i2 = timedAction(active, active.chooseMove)
+        except Watchdog:
+            return passive
+
+        # Get result of move
+        outcome = giveOutcome(passive._playerBoard, i1, i2)
+
+        if gui:
+            if outcome == const.HIT:
+                gui.drawHit('left' if turn > 0 else 'right', i1, i2)
+            else:
+                gui.drawMiss('left' if turn > 0 else 'right', i1, i2)
+
+        try:
+            timedAction(active, active.setOutcome, outcome, i1, i2)
+        except Watchdog:
+            return passive
+
+        try:
+            timedAction(passive, passive.getOpponentMove, i1, i2)
+        except Watchdog:
+            return active
+
         if turn > 0:
-            # Make a move by looking at the opponent's board
-            try:
-                i1, i2 = timedAction(firstPlayer, firstPlayer.chooseMove)
-            except Watchdog:
-                return secondPlayer
-
-            # Get result of move
-            outcome = giveOutcome(secondPlayer._playerBoard, i1, i2)
-
-            if gui:
-                if outcome == const.HIT:
-                    gui.drawHit('left', i1, i2)
-                else:
-                    gui.drawMiss('left', i1, i2)
-
-            try:
-                timedAction(firstPlayer, firstPlayer.setOutcome, outcome, i1, i2)
-            except Watchdog:
-                return secondPlayer
-
-            try:
-                timedAction(secondPlayer, secondPlayer.getOpponentMove, i1, i2)
-            except Watchdog:
-                return firstPlayer
-
-            # Show the current board state
-            haveWinner = checkWinner(secondPlayer._playerBoard)
             player1Moves += 1
-
         else:
-            # Make a move by looking at the opponent's board
-            try:
-                i1, i2 = timedAction(secondPlayer, secondPlayer.chooseMove)
-            except Watchdog:
-                return firstPlayer
-
-            # Get result of move
-            outcome = giveOutcome(firstPlayer._playerBoard, i1, i2)
-
-            if gui:
-                if outcome == const.HIT:
-                    gui.drawHit('right', i1, i2)
-                else:
-                    gui.drawMiss('right', i1, i2)
-
-            try:
-                timedAction(secondPlayer, secondPlayer.setOutcome, outcome, i1, i2)
-            except Watchdog:
-                return firstPlayer
-
-            try:
-                timedAction(firstPlayer, firstPlayer.getOpponentMove, i1, i2)
-            except Watchdog:
-                return secondPlayer
-
-            # Show the current board state
-            haveWinner = checkWinner(firstPlayer._playerBoard)
             player2Moves += 1
-        turn *= -1
 
-    if args.verbose:
-        print "Player1 moves: {}; Player2 moves: {}".format(player1Moves,
-                                                            player2Moves)
-    return secondPlayer if turn > 0 else firstPlayer
+        if checkWinner(passive._playerBoard):
+            if args.verbose:
+                print "Player1 moves: {}; Player2 moves: {}"\
+                    .format(player1Moves, player2Moves)
+            return active
+
+        turn *= -1
 
 
 def printTable(table, listPlayers):
