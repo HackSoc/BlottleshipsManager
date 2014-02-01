@@ -121,8 +121,22 @@ def playMatch(firstPlayer, secondPlayer, rounds, gui):
 
 def playGame(firstPlayer, secondPlayer, turn, gui):
     # Distribute the fleet onto each player board
-    player1_board = firstPlayer.deployFleet()
-    player2_board = secondPlayer.deployFleet()
+
+    try:
+        with Watchdog(watchdog_time):
+            player1_board = firstPlayer.deployFleet()
+    except Watchdog:
+        print "Player 1 took longer than {}s for deployFleet()"\
+           .format(watchdog_time)
+        return (0, 1)
+
+    try:
+        with Watchdog(watchdog_time):
+            player2_board = secondPlayer.deployFleet()
+    except Watchdog:
+        print "Player 2 took longer than {}s for deployFleet()"\
+           .format(watchdog_time)
+        return (1, 0)
 
     if gui:
         for row in range(len(player1_board)):
