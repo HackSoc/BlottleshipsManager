@@ -35,21 +35,12 @@ def giveOutcome(player_board, i1, i2):
         return const.MISSED
 
 def initialiseChampionshipTable(listPlayers):
-    table = {}
-    for playerNumber in range(len(listPlayers)):
-        playerStats = {}
-        playerStats["Win"] = 0
-        playerStats["Draw"] = 0
-        playerStats["Loss"] = 0
-        playerStats["For"] = 0
-        playerStats["Against"] = 0
-        table[playerNumber] = playerStats
-
-    return table
+    for playerwrap in listPlayers:
+        playerwrap.reset_stats()
 
 
 def playChampionship(listPlayers, rounds, gui):
-    table = initialiseChampionshipTable(listPlayers)
+    initialiseChampionshipTable(listPlayers)
     totalPlayers = len(listPlayers)
     listGames = []
     for home in range(totalPlayers - 1):
@@ -58,56 +49,53 @@ def playChampionship(listPlayers, rounds, gui):
 
     print listGames
     for game in listGames:
-        result = playMatch(listPlayers[game[0]],
-                           listPlayers[game[1]], rounds, gui)
-        firstPlayerStats = table[game[0]]
-        secondPlayerStats = table[game[1]]
+        player1 = listPlayers[game[0]]
+        player2 = listPlayers[game[1]]
+        result = playMatch(player1, player2, rounds, gui)
 
         # Draw
         if result[0] == result[1]:
-            firstPlayerStats["Draw"] += 1
-            secondPlayerStats["Draw"] += 1
+            player1.stats["Draw"] += 1
+            player2.stats["Draw"] += 1
 
         # Player 1 win
         elif result[0] > result[1]:
-            firstPlayerStats["Win"] += 1
-            secondPlayerStats["Loss"] += 1
+            player1.stats["Win"] += 1
+            player2.stats["Loss"] += 1
 
         # Player 2 win
         else:
-            firstPlayerStats["Loss"] += 1
-            secondPlayerStats["Win"] += 1
+            player1.stats["Loss"] += 1
+            player2.stats["Win"] += 1
 
-        firstPlayerStats["For"] += result[0]
-        firstPlayerStats["Against"] += result[1]
-        secondPlayerStats["For"] += result[1]
-        secondPlayerStats["Against"] += result[0]
-
-    return table
+        player1.stats["For"] += result[0]
+        player1.stats["Against"] += result[1]
+        player2.stats["For"] += result[1]
+        player2.stats["Against"] += result[0]
 
 
-def playMatch(firstPlayer, secondPlayer, rounds, gui):
+def playMatch(player1wrap, player2wrap, rounds, gui):
     scorePlayer1 = scorePlayer2 = 0
     for game in range(rounds):
         if gui:
             gui.turtle.clear()
             gui.drawBoards()
-            gui.drawPlayer(firstPlayer.getName(),
-                           firstPlayer.getDescription(), 'left')
-            gui.drawPlayer(secondPlayer.getName(),
-                           secondPlayer.getDescription(), 'right')
+            gui.drawPlayer(player1wrap.ai.getName(),
+                           player1wrap.ai.getDescription(), 'left')
+            gui.drawPlayer(player2wrap.ai.getName(),
+                           player2wrap.ai.getDescription(), 'right')
             gui.drawScore(scorePlayer1, scorePlayer2)
 
         turn = (-1)**game
-        winner = playGame(firstPlayer, secondPlayer, turn, gui)
+        winner = playGame(player1wrap, player2wrap, turn, gui)
 
-        if winner is firstPlayer:
+        if winner is player1wrap.ai:
             scorePlayer1 += 1
         else:
             scorePlayer2 += 1
 
-        print "---------------- ", firstPlayer.getName(), scorePlayer1, "-",
-        print scorePlayer2, secondPlayer.getName(), "----------------"
+        print "---------------- ", player1wrap.ai.getName(), scorePlayer1,
+        print "-", scorePlayer2, player2wrap.ai.getName(), "----------------"
 
         if gui:
             gui.drawScore(scorePlayer1, scorePlayer2)
@@ -133,34 +121,36 @@ def timedAction(player, action, *args, **kwargs):
         raise
 
 
-def playGame(firstPlayer, secondPlayer, turn, gui):
+def playGame(player1wrap, player2wrap, turn, gui):
 
     # Distribute the fleet onto each player board
     try:
-        firstPlayer._playerBoard = timedAction(firstPlayer, firstPlayer.deployFleet)
+        player1wrap.ai._playerBoard = timedAction(player1wrap.ai,
+                                                  player1wrap.ai.deployFleet)
     except Watchdog:
-        return secondPlayer
+        return player2wrap
     try:
-        secondPlayer._playerBoard = timedAction(secondPlayer, secondPlayer.deployFleet)
+        player2wrap.ai._playerBoard = timedAction(player2wrap.ai,
+                                                  player2wrap.ai.deployFleet)
     except Watchdog:
-        return firstPlayer
+        return player1wrap
 
     if gui:
-        for row in range(len(firstPlayer._playerBoard)):
-            for col in range(len(firstPlayer._playerBoard[row])):
-                if firstPlayer._playerBoard[row][col] == const.OCCUPIED:
+        for row in range(len(player1wrap.ai._playerBoard)):
+            for col in range(len(player1wrap.ai._playerBoard[row])):
+                if player1wrap.ai._playerBoard[row][col] == const.OCCUPIED:
                     gui.drawBoat('right', row, col)
 
-        for row in range(len(secondPlayer._playerBoard)):
-            for col in range(len(secondPlayer._playerBoard[row])):
-                if secondPlayer._playerBoard[row][col] == const.OCCUPIED:
+        for row in range(len(player2wrap.ai._playerBoard)):
+            for col in range(len(player2wrap.ai._playerBoard[row])):
+                if player2wrap.ai._playerBoard[row][col] == const.OCCUPIED:
                     gui.drawBoat('left', row, col)
 
     player1Moves = 0
     player2Moves = 0
     while True:
-        active = firstPlayer if turn > 0 else secondPlayer
-        passive = secondPlayer if turn > 0 else firstPlayer
+        active = player1wrap.ai if turn > 0 else player2wrap.ai
+        passive = player2wrap.ai if turn > 0 else player1wrap.ai
 
         # Make a move by looking at the opponent's board
         try:
@@ -201,14 +191,14 @@ def playGame(firstPlayer, secondPlayer, turn, gui):
         turn *= -1
 
 
-def printTable(table, listPlayers):
+def printTable(listPlayers):
     wins = 3
     draws = 1
     losses = 0
     listResults = []
-    for player in table:
-        stats = table[player]
-        points = wins * stats["Win"]\
+    for player in listPlayers:
+        stats = player.stats
+        player.points = wins * stats["Win"]\
             + draws * stats["Draw"]\
             + losses * stats["Loss"]
         setsFor = stats["For"]
@@ -219,8 +209,8 @@ def printTable(table, listPlayers):
     pos = 1
     print " | pos | ", "   Name                ", " | ", " W ", " D ", " L ",
     print "  F ", "  A", "| ", "Points |"
-    for player in listResults:
-        name = listPlayers[player[3]].getName()
+    for res in listResults:
+        name = listPlayers[res[3]].getName()
 
         # Padding name
         if len(name) <= 25:
@@ -228,10 +218,10 @@ def printTable(table, listPlayers):
         else:
             name = name[:25]
 
-        stats = table[player[3]]
+        stats = res[3].ai.stats
         print ' | {:3} | {} | {:3} {:3} {:3} {:4} {:4} | {:5}   |'\
             .format(pos, name, stats["Win"], stats["Draw"], stats["Loss"],
-                    stats["For"], stats["Against"], player[0])
+                    stats["For"], stats["Against"], res[0])
 
         pos += 1
 
@@ -257,8 +247,8 @@ if args.gui:
     from battleships_gui import BattleshipsGraphics
     guiInstance = BattleshipsGraphics(12)  # Gridsize of 12
 
-resultsTable = playChampionship(playerList, args.rounds, guiInstance)
-printTable(resultsTable, playerList)
+playChampionship(playerList, args.rounds, guiInstance)
+printTable(playerList)
 
 if args.gui:
     # Must be the last line of code
