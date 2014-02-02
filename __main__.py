@@ -196,20 +196,16 @@ def printTable(listPlayers):
     losses = 0
     listResults = []
     for player in listPlayers:
-        stats = player.stats
-        player.points = wins * stats["Win"]\
-            + draws * stats["Draw"]\
-            + losses * stats["Loss"]
-        setsFor = stats["For"]
-        setsAgainst = stats["Against"]
-        listResults.append((points, setsFor - setsAgainst, setsFor, player))
+        setsFor = player.stats["For"]
+        setsAgainst = player.stats["Against"]
+        listResults.append((player.score(), setsFor - setsAgainst, setsFor, player))
 
     listResults.sort(reverse=True)
     pos = 1
     print " | pos | ", "   Name                ", " | ", " W ", " D ", " L ",
     print "  F ", "  A", "| ", "Points |"
     for res in listResults:
-        name = listPlayers[res[3]].getName()
+        name = res[3].ai.getName()
 
         # Padding name
         if len(name) <= 25:
@@ -217,7 +213,7 @@ def printTable(listPlayers):
         else:
             name = name[:25]
 
-        stats = res[3].ai.stats
+        stats = res[3].stats
         print ' | {:3} | {} | {:3} {:3} {:3} {:4} {:4} | {:5}   |'\
             .format(pos, name, stats["Win"], stats["Draw"], stats["Loss"],
                     stats["For"], stats["Against"], res[0])

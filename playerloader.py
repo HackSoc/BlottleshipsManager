@@ -20,7 +20,8 @@ class PlayerWrapper:
         self.stats["Against"] = 0
 
     def score(self):
-        pass
+        return self.stats["Win"] * 3 + self.stats["Draw"] * 1\
+            + self.stats["Loss"] * 0
 
 
 def import_players():
