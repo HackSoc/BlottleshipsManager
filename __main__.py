@@ -218,7 +218,7 @@ def printTable(table, listPlayers):
     listResults.sort(reverse=True)
     pos = 1
     print " | pos | ", "   Name                ", " | ", " W ", " D ", " L ",
-    print "  F ", "  ", " | ", "Points |"
+    print "  F ", "  A", "| ", "Points |"
     for player in listResults:
         name = listPlayers[player[3]].getName()
 
@@ -235,6 +235,8 @@ def printTable(table, listPlayers):
 
         pos += 1
 
+
+### Start ###
 parser = argparse.ArgumentParser(description="Blottleships Game Manager")
 parser.add_argument("-v", "--verbose", action="store_true",
                     help="""Run with verbose console output
