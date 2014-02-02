@@ -34,13 +34,12 @@ def giveOutcome(player_board, i1, i2):
         # has missed, but here we just acknowledge it
         return const.MISSED
 
-def initialiseChampionshipTable(listPlayers):
+
+def playChampionship(listPlayers, rounds, gui):
+    # Make sure stats are at 0
     for playerwrap in listPlayers:
         playerwrap.reset_stats()
 
-
-def playChampionship(listPlayers, rounds, gui):
-    initialiseChampionshipTable(listPlayers)
     totalPlayers = len(listPlayers)
     listGames = []
     for home in range(totalPlayers - 1):
