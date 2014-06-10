@@ -11,7 +11,7 @@ class BattleshipsGraphics:
 
     def __init__(self, gridSize):
         self.turtle = turtle.Turtle()
-        self.screen = turtle.getscreen()
+        self.screen = self.turtle.getscreen()
         self.screen.setup(width=1200, height=750, startx=None, starty=None)
         self.screen.register_shape(const.MISSED_GIF)
         self.screen.register_shape(const.HIT_GIF)

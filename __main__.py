@@ -75,7 +75,16 @@ def playChampionship(listPlayers, rounds, gui):
 
 def playMatch(player1wrap, player2wrap, rounds, gui):
     scorePlayer1 = scorePlayer2 = 0
+    player1wrap.stats["Moves"] = 0
+    player2wrap.stats["Moves"] = 0
+
+    player1wrap.ai.newPlayer(player2wrap.ai.getName())
+    player2wrap.ai.newPlayer(player1wrap.ai.getName())
+
     for game in range(rounds):
+        player1wrap.ai.newRound()
+        player2wrap.ai.newRound()
+
         if gui:
             gui.turtle.clear()
             gui.drawBoards()
@@ -93,11 +102,26 @@ def playMatch(player1wrap, player2wrap, rounds, gui):
         else:
             scorePlayer2 += 1
 
-        print "---------------- ", player1wrap.ai.getName(), scorePlayer1,
-        print "-", scorePlayer2, player2wrap.ai.getName(), "----------------"
-
         if gui:
             gui.drawScore(scorePlayer1, scorePlayer2)
+
+    ## Print stats of the current game.
+    print "\n----Rounds won---- ",player1wrap.ai.getName(), scorePlayer1, "-",
+    print scorePlayer2, player2wrap.ai.getName(), "----------------"
+
+    print "-shots per Round-- ", player1wrap.ai.getName(),
+    if scorePlayer1 == 0:
+        print "N/A",
+    else:
+        print player1wrap.stats["Moves"] / scorePlayer1, "-",
+
+    if scorePlayer2 == 0:
+        print "N/A",
+    else:
+        print player2wrap.stats["Moves"] / scorePlayer2, "-",
+
+    print  player2wrap.ai.getName(), "----------------\n"
+    ## end printing stats block
 
     if gui:
         if scorePlayer2 > scorePlayer1:
@@ -185,6 +209,10 @@ def playGame(player1wrap, player2wrap, turn, gui):
             if args.verbose:
                 print "Player1 moves: {}; Player2 moves: {}"\
                     .format(player1Moves, player2Moves)
+            if turn > 0:
+                player1wrap.stats["Moves"] += player1Moves
+            else:
+                player2wrap.stats["Moves"] += player2Moves
             return active
 
         turn *= -1

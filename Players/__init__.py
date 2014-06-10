@@ -67,3 +67,15 @@ class BasePlayer:
         """
 
         pass
+
+    def newRound(self):
+        """
+        Run at the start each round.
+        """
+        pass
+
+    def newPlayer(self, name=None):
+        """
+        Run at the start of each match, giving you the name of the opposing AI.
+        """
+        pass

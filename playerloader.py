@@ -18,6 +18,7 @@ class PlayerWrapper:
         self.stats["Loss"] = 0
         self.stats["For"] = 0
         self.stats["Against"] = 0
+        self.stats["Moves"] = 0
 
     def score(self):
         return self.stats["Win"] * 3 + self.stats["Draw"] * 1\
