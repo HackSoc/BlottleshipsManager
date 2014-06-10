@@ -45,10 +45,15 @@ def playChampionship(listPlayers, rounds, gui):
             listGames.append((home, away))
 
     print listGames
+    match_num = 1
     for game in listGames:
         player1 = listPlayers[game[0]]
         player2 = listPlayers[game[1]]
         result = playMatch(player1, player2, rounds, gui)
+
+        printMatchRes(match_num, len(listGames),
+                      player1, result[0],
+                      player2, result[1])
 
         # Draw
         if result[0] == result[1]:
@@ -70,15 +75,17 @@ def playChampionship(listPlayers, rounds, gui):
         player2.stats["For"] += result[1]
         player2.stats["Against"] += result[0]
 
+        match_num += 1
 
-def printMatchRes(player1wrap, scorePlayer1, player2wrap, scorePlayer2):
-    middle = str(scorePlayer1).zfill(2) + " - " + str(scorePlayer2).zfill(2)
+
+def printMatchRes(m_num, m_total, player1wrap, scorePlayer1, player2wrap, scorePlayer2):
     print ""
-    print "----Rounds won---- ", player1wrap.ai.getName(),
-    print middle,
+    print "--Match", str(m_num).zfill(2), "of", str(m_total) + "--",
+    print player1wrap.ai.getName(),
+    print str(scorePlayer1).zfill(2) + " - " + str(scorePlayer2).zfill(2),
     print player2wrap.ai.getName(), "----------------"
 
-    print "-shots per Round-- ", player1wrap.ai.getName(),
+    print "-shots per Round--", player1wrap.ai.getName(),
     if scorePlayer1 == 0:
         print "NA",
     else:
@@ -126,8 +133,6 @@ def playMatch(player1wrap, player2wrap, rounds, gui):
 
         if gui:
             gui.drawScore(scorePlayer1, scorePlayer2)
-
-    printMatchRes(player1wrap, scorePlayer1, player2wrap, scorePlayer2)
 
     if gui:
         if scorePlayer2 > scorePlayer1:
