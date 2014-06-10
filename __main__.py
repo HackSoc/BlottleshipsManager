@@ -71,6 +71,30 @@ def playChampionship(listPlayers, rounds, gui):
         player2.stats["Against"] += result[0]
 
 
+def printMatchRes(player1wrap, scorePlayer1, player2wrap, scorePlayer2):
+    middle = str(scorePlayer1).zfill(2) + " - " + str(scorePlayer2).zfill(2)
+    print ""
+    print "----Rounds won---- ", player1wrap.ai.getName(),
+    print middle,
+    print player2wrap.ai.getName(), "----------------"
+
+    print "-shots per Round-- ", player1wrap.ai.getName(),
+    if scorePlayer1 == 0:
+        print "NA",
+    else:
+        print str(player1wrap.stats["Moves"] / scorePlayer1).zfill(2),
+
+    print "-",
+
+    if scorePlayer2 == 0:
+        print "NA",
+    else:
+        print str(player2wrap.stats["Moves"] / scorePlayer2).zfill(2),
+
+    print player2wrap.ai.getName(), "----------------"
+    print ""
+
+
 def playMatch(player1wrap, player2wrap, rounds, gui):
     scorePlayer1 = scorePlayer2 = 0
     player1wrap.stats["Moves"] = 0
@@ -103,23 +127,7 @@ def playMatch(player1wrap, player2wrap, rounds, gui):
         if gui:
             gui.drawScore(scorePlayer1, scorePlayer2)
 
-    # Print stats of the current game.
-    print "\n----Rounds won---- ", player1wrap.ai.getName(), scorePlayer1, "-",
-    print scorePlayer2, player2wrap.ai.getName(), "----------------"
-
-    print "-shots per Round-- ", player1wrap.ai.getName(),
-    if scorePlayer1 == 0:
-        print "N/A",
-    else:
-        print player1wrap.stats["Moves"] / scorePlayer1, "-",
-
-    if scorePlayer2 == 0:
-        print "N/A",
-    else:
-        print player2wrap.stats["Moves"] / scorePlayer2, "-",
-
-    print player2wrap.ai.getName(), "----------------\n"
-    # End printing stats block
+    printMatchRes(player1wrap, scorePlayer1, player2wrap, scorePlayer2)
 
     if gui:
         if scorePlayer2 > scorePlayer1:
