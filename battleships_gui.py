@@ -1,14 +1,11 @@
 import turtle
 import const
-###########################################################
-##
-##                   DISPLAY
-##
-###########################################################
 
 
 class BattleshipsGraphics:
-
+    """
+    Display instance.
+    """
     def __init__(self, gridSize):
         self.turtle = turtle.Turtle()
         self.screen = self.turtle.getscreen()
@@ -222,7 +219,7 @@ class BattleshipsGraphics:
         colLabels = ['1', '2', '3', '4', '5', '6',
                      '7', '8', '9', '10', '11', '12']
 
-        ## drawing left board
+        # Drawing left board
         leftL = -gridSize * squareSize - marginw
         leftR = -marginw
         leftM = -squareSize * gridSize / 2 - marginw

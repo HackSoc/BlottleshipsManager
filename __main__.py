@@ -5,9 +5,7 @@ import const
 import playerloader
 from watchdog import Watchdog
 
-##########################################
-##              PARAMETERS              ##
-##########################################
+# PARAMETERS
 
 watchdog_time = 2  # How many seconds to allow AIs for each function call.
 
@@ -105,8 +103,8 @@ def playMatch(player1wrap, player2wrap, rounds, gui):
         if gui:
             gui.drawScore(scorePlayer1, scorePlayer2)
 
-    ## Print stats of the current game.
-    print "\n----Rounds won---- ",player1wrap.ai.getName(), scorePlayer1, "-",
+    # Print stats of the current game.
+    print "\n----Rounds won---- ", player1wrap.ai.getName(), scorePlayer1, "-",
     print scorePlayer2, player2wrap.ai.getName(), "----------------"
 
     print "-shots per Round-- ", player1wrap.ai.getName(),
@@ -120,8 +118,8 @@ def playMatch(player1wrap, player2wrap, rounds, gui):
     else:
         print player2wrap.stats["Moves"] / scorePlayer2, "-",
 
-    print  player2wrap.ai.getName(), "----------------\n"
-    ## end printing stats block
+    print player2wrap.ai.getName(), "----------------\n"
+    # End printing stats block
 
     if gui:
         if scorePlayer2 > scorePlayer1:
@@ -138,7 +136,7 @@ def timedAction(player, action, *args, **kwargs):
     try:
         with Watchdog(watchdog_time):
             return action(*args, **kwargs)
-    except Watchdog, e:
+    except Watchdog:
         print "{} took longer longer than {}s for {}()"\
             .format(player.getName(), watchdog_time, action.__name__)
         raise
@@ -219,14 +217,13 @@ def playGame(player1wrap, player2wrap, turn, gui):
 
 
 def printTable(listPlayers):
-    wins = 3
-    draws = 1
-    losses = 0
     listResults = []
     for player in listPlayers:
         setsFor = player.stats["For"]
         setsAgainst = player.stats["Against"]
-        listResults.append((player.score(), setsFor - setsAgainst, setsFor, player))
+        listResults.append((player.score(),
+                            setsFor - setsAgainst,
+                            setsFor, player))
 
     listResults.sort(reverse=True)
     pos = 1
@@ -249,7 +246,7 @@ def printTable(listPlayers):
         pos += 1
 
 
-### Start ###
+# Start
 parser = argparse.ArgumentParser(description="Blottleships Game Manager")
 parser.add_argument("-v", "--verbose", action="store_true",
                     help="""Run with verbose console output
